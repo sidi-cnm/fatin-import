@@ -1,0 +1,448 @@
+{
+  "subject": 16,
+  "source_file": "math_1AP_U01.pdf",
+  "language": "ar",
+  "units": [
+    {
+      "ref": "u1",
+      "title": "الإدراك المكاني والتموضع",
+      "description": "تُعنى هذه الوحدة ببناء الوعي المكاني الأولي لدى المتعلم وتمكينه من فهم العلاقات المكانية داخل البيئة المحيطة، باعتبارها الأساس الذي تُبنى عليه مفاهيم الهندسة والقياس والتنظيم المكاني في المراحل اللاحقة.",
+      "central_question": "كيف أحدد موقع الأشياء وعلاقاتها داخل الفضاء المحيط؟",
+      "main_goal_description": "أن يصف المتعلم موقع الأشياء من حوله بالنسبة إلى نفسه وبالنسبة إلى مرجع خارجي، مستعملاً كلمات الموقع الأساسية.",
+      "main_skill_domain": "الوعي المكاني والإدراك البصري",
+      "order_index": 1,
+      "origin": "extracted",
+      "source_page": 8,
+      "lessons": [
+        {
+          "ref": "u1-l1",
+          "title": "التمييز بين الوضعيات المكانية الأساسية",
+          "description": "يتعرف المتعلم على أن لكل شيء موقعاً في الفضاء، ثم يحدد موقع عنصر بالنسبة إلى نفسه وبالنسبة إلى مرجع خارجي، باستعمال الكلمات: أمام، خلف، فوق، تحت، داخل، خارج، يمين، يسار.",
+          "order_index": 1,
+          "origin": "extracted",
+          "source_page": 9,
+          "goals": [
+            {
+              "goal_type": "conceptual",
+              "title": "فهم أن للأشياء مواقع مختلفة داخل الفضاء المحيط.",
+              "description": null,
+              "order_index": 1,
+              "origin": "extracted",
+              "skills": [
+                {
+                  "ref": "s-c01",
+                  "name": "إدراك أن لكل عنصر موقعاً مكانياً",
+                  "description": "يدرك المتعلم أن لكل عنصر موقعاً خاصاً به داخل الفضاء.",
+                  "skill_type": "conceptual",
+                  "difficulty": 1,
+                  "order_index": 1,
+                  "prerequisites": [],
+                  "origin": "extracted",
+                  "chunks": [
+                    {
+                      "chunk_type": "rule",
+                      "title": "مفهوم الموقع المكاني",
+                      "content": "يشغل كل عنصر داخل الفضاء موضعاً يمكن تمييزه عن مواضع العناصر الأخرى.",
+                      "difficulty": 1,
+                      "order_index": 1,
+                      "origin": "extracted",
+                      "source_page": 9,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "example",
+                      "title": null,
+                      "content": "في القسم: السبورة على الحائط، والمكتب أمام السبورة، والحقيبة تحت الطاولة. لكل شيء مكانه الخاص، ولا يوجد شيئان في المكان نفسه.",
+                      "difficulty": 1,
+                      "order_index": 2,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "وَضَعَ أحمد كرة على الطاولة، ونامت قطة تحت الكرسي. هل للكرة والقطة المكان نفسه؟",
+                      "difficulty": 1,
+                      "order_index": 3,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "نعم، لهما المكان نفسه",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "الكرة فوق الطاولة والقطة تحت الكرسي: لكل منهما مكانه."
+                        },
+                        {
+                          "id": "b",
+                          "text": "لا، لكل واحدة مكانها",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! لكل شيء مكانه الخاص."
+                        },
+                        {
+                          "id": "c",
+                          "text": "الكرة ليس لها مكان",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "كل شيء نراه له مكان، ومكان الكرة فوق الطاولة."
+                        }
+                      ]
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "وضعت فاطمة كرتها على الطاولة. أين توجد الكرة؟",
+                      "difficulty": 1,
+                      "order_index": 4,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "فوق الطاولة",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! الكرة فوق الطاولة."
+                        },
+                        {
+                          "id": "b",
+                          "text": "تحت الكرسي",
+                          "is_correct": false,
+                          "error_category": "careless",
+                          "feedback": "فاطمة وضعت الكرة على الطاولة، لا تحت الكرسي: الكرة فوق الطاولة."
+                        },
+                        {
+                          "id": "c",
+                          "text": "ليس لها مكان",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "كل شيء له مكان، والكرة موضوعة فوق الطاولة."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ref": "s-c02",
+                  "name": "التمييز بين العناصر وفق اختلاف مواقعها",
+                  "description": "يميز المتعلم بين عنصرين يختلفان في الموقع رغم تشابه خصائصهما الأخرى.",
+                  "skill_type": "conceptual",
+                  "difficulty": 1,
+                  "order_index": 2,
+                  "prerequisites": [
+                    "s-c01"
+                  ],
+                  "origin": "extracted",
+                  "chunks": [
+                    {
+                      "chunk_type": "rule",
+                      "title": "اختلاف المواقع",
+                      "content": "قد تختلف مواقع العناصر رغم تشابه خصائصها الأخرى.",
+                      "difficulty": 1,
+                      "order_index": 1,
+                      "origin": "extracted",
+                      "source_page": 9,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "example",
+                      "title": null,
+                      "content": "عندي كرتان حمراوان متشابهتان: الأولى داخل الصندوق، والثانية خارج الصندوق. هما متشابهتان في اللون والشكل، لكن مكانهما مختلف.",
+                      "difficulty": 1,
+                      "order_index": 2,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "كرتان متشابهتان، واحدة داخل الصندوق والأخرى خارجه. ما الذي يميّز بينهما؟",
+                      "difficulty": 1,
+                      "order_index": 3,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "اللون",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "للكرتين اللون نفسه، الفرق بينهما في المكان."
+                        },
+                        {
+                          "id": "b",
+                          "text": "المكان",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! واحدة داخل الصندوق والأخرى خارجه."
+                        },
+                        {
+                          "id": "c",
+                          "text": "الحجم",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "الكرتان بالحجم نفسه، انظر إلى مكان كل واحدة."
+                        }
+                      ]
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "ثلاث تفاحات متشابهة: الأولى فوق الطاولة، والثانية تحت الطاولة، والثالثة بجانب الطاولة. أيّ تفاحة تحت الطاولة؟",
+                      "difficulty": 2,
+                      "order_index": 4,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "الأولى",
+                          "is_correct": false,
+                          "error_category": "careless",
+                          "feedback": "انتبه: التفاحة الأولى فوق الطاولة وليست تحتها."
+                        },
+                        {
+                          "id": "b",
+                          "text": "الثانية",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! التفاحة الثانية تحت الطاولة."
+                        },
+                        {
+                          "id": "c",
+                          "text": "الثالثة",
+                          "is_correct": false,
+                          "error_category": "procedure",
+                          "feedback": "قريب! التفاحة الثالثة بجانب الطاولة، و«تحت» تعني أسفل الطاولة."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "goal_type": "operational",
+              "title": "تحديد موقع عنصر بالنسبة لمرجع واحد.",
+              "description": null,
+              "order_index": 2,
+              "origin": "extracted",
+              "skills": [
+                {
+                  "ref": "s-o01",
+                  "name": "تحديد موقع عنصر بالاستناد إلى المرجع الذاتي",
+                  "description": "يحدد المتعلم موقع عنصر بالاعتماد على موقعه الشخصي.",
+                  "skill_type": "operational",
+                  "difficulty": 1,
+                  "order_index": 1,
+                  "prerequisites": [
+                    "s-c01"
+                  ],
+                  "origin": "extracted",
+                  "chunks": [
+                    {
+                      "chunk_type": "rule",
+                      "title": "المرجع الذاتي",
+                      "content": "يمكن استخدام موقع المتعلم نفسه كنقطة مرجعية لتحديد مواقع العناصر المحيطة.",
+                      "difficulty": 1,
+                      "order_index": 1,
+                      "origin": "extracted",
+                      "source_page": 10,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "example",
+                      "title": null,
+                      "content": "أقف أمام الطاولة وأنظر إليها: الطاولة أمامي لأنني أراها أمام وجهي، والنافذة خلفي لأنها وراء ظهري، والكرسي على يميني لأنه بجانب يدي اليمنى.",
+                      "difficulty": 1,
+                      "order_index": 2,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "error",
+                      "title": null,
+                      "content": "انتبه: يمينك ليس هو يمين الشخص الذي يقف أمامك وينظر إليك. انطلق دائماً من موقع الشخص المذكور في السؤال.",
+                      "difficulty": 1,
+                      "order_index": 3,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "الطفل ينظر إلى الأمام، والكرة بجانب يده اليمنى. أين تقع الكرة بالنسبة إليه؟",
+                      "difficulty": 1,
+                      "order_index": 4,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "أمامه",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "تذكّر: انطلق من موقع الطفل نفسه، وليس مما تراه أنت أمامك."
+                        },
+                        {
+                          "id": "b",
+                          "text": "على يساره",
+                          "is_correct": false,
+                          "error_category": "procedure",
+                          "feedback": "فكرتك صحيحة! لكن انتبه: الكرة بجانب يده اليمنى وليس اليسرى."
+                        },
+                        {
+                          "id": "c",
+                          "text": "على يمينه",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! الكرة على يمين الطفل."
+                        }
+                      ]
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "الطفل يقف وظهره إلى الشجرة. أين تقع الشجرة بالنسبة إليه؟",
+                      "difficulty": 2,
+                      "order_index": 5,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "أمامه",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "الطفل لا يرى الشجرة لأنها وراء ظهره. انطلق من اتجاه نظره هو."
+                        },
+                        {
+                          "id": "b",
+                          "text": "خلفه",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "ممتاز! ما وراء الظهر يكون «خلف»."
+                        },
+                        {
+                          "id": "c",
+                          "text": "على يمينه",
+                          "is_correct": false,
+                          "error_category": "procedure",
+                          "feedback": "قريب! لكن الشجرة ليست بجانبه، بل وراء ظهره مباشرة."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ref": "s-o02",
+                  "name": "تحديد موقع عنصر بالاستناد إلى مرجع خارجي",
+                  "description": "يحدد المتعلم موقع عنصر بالاعتماد على مرجع خارجي ثابت.",
+                  "skill_type": "operational",
+                  "difficulty": 2,
+                  "order_index": 2,
+                  "prerequisites": [
+                    "s-o01"
+                  ],
+                  "origin": "extracted",
+                  "chunks": [
+                    {
+                      "chunk_type": "rule",
+                      "title": "المرجع الخارجي",
+                      "content": "يمكن استخدام عنصر خارجي ثابت كمرجع لتحديد موقع عنصر آخر داخل الفضاء.",
+                      "difficulty": 1,
+                      "order_index": 1,
+                      "origin": "extracted",
+                      "source_page": 10,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "example",
+                      "title": null,
+                      "content": "المرجع هنا هو البيت: الشجرة أمام البيت، والسيارة خلف البيت، والكلب بجانب البيت. نصف مكان كل شيء بالنسبة إلى البيت، لا بالنسبة إلينا.",
+                      "difficulty": 1,
+                      "order_index": 2,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": null
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "القطة تجلس فوق الصندوق. أين تقع القطة بالنسبة إلى الصندوق؟",
+                      "difficulty": 1,
+                      "order_index": 3,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "تحته",
+                          "is_correct": false,
+                          "error_category": "procedure",
+                          "feedback": "اقتربت! لكن القطة أعلى الصندوق، فهي فوقه."
+                        },
+                        {
+                          "id": "b",
+                          "text": "فوقه",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! القطة فوق الصندوق."
+                        },
+                        {
+                          "id": "c",
+                          "text": "أمامي",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "السؤال عن مكان القطة بالنسبة إلى الصندوق، وليس بالنسبة إليك."
+                        }
+                      ]
+                    },
+                    {
+                      "chunk_type": "practice",
+                      "title": null,
+                      "content": "الكتاب داخل الحقيبة، والحقيبة فوق المكتب. أين يقع الكتاب بالنسبة إلى الحقيبة؟",
+                      "difficulty": 2,
+                      "order_index": 4,
+                      "origin": "proposed",
+                      "source_page": null,
+                      "options": [
+                        {
+                          "id": "a",
+                          "text": "فوقها",
+                          "is_correct": false,
+                          "error_category": "careless",
+                          "feedback": "انتبه: الحقيبة هي التي فوق المكتب، أما الكتاب فهو داخل الحقيبة."
+                        },
+                        {
+                          "id": "b",
+                          "text": "داخلها",
+                          "is_correct": true,
+                          "error_category": null,
+                          "feedback": "أحسنت! الكتاب داخل الحقيبة."
+                        },
+                        {
+                          "id": "c",
+                          "text": "على يميني",
+                          "is_correct": false,
+                          "error_category": "concept",
+                          "feedback": "المرجع هنا هو الحقيبة، فصف مكان الكتاب بالنسبة إليها."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

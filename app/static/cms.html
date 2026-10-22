@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فطين – محاكاة لوحة الإدارة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap">
+<style>
+/* Mise en page : une colonne d'étapes ; à la relecture, le contenu (à droite) et la page du livre (à gauche). */
+:root {
+  --bg: #f4f6f5; --surface: #fff; --fg: #18231e; --muted: #5d6c64; --line: #d8e1dc;
+  --accent: #0b6e4f; --accent-soft: #e1f1e9; --warn: #9a6700; --warn-soft: #fff4d6;
+  --err: #b42318; --err-soft: #fde8e6; --info-soft: #eef3ff; --info: #2f5bb7;
+  --ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --content: "Noto Naskh Arabic", "Traditional Arabic", serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--ui); font-size: 15px; line-height: 1.6; }
+header.top { background: var(--surface); border-bottom: 1px solid var(--line); padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; position: sticky; top: 0; z-index: 20; }
+header.top h1 { font-size: 1.15rem; margin: 0; }
+header.top .sub { color: var(--muted); font-size: .85rem; }
+.steps { display: flex; gap: 6px; flex-wrap: wrap; margin-inline-start: auto; }
+.step-pill { font-size: .8rem; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); background: var(--bg); }
+.step-pill.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+main { padding: 18px 20px 60px; display: grid; gap: 18px; max-width: 1500px; margin: 0 auto; }
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+section.card > h2 { margin: 0 0 10px; font-size: 1.05rem; display: flex; gap: 10px; align-items: center; }
+.num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-size: .85rem; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.field { display: grid; gap: 3px; }
+.field label { font-size: .78rem; color: var(--muted); font-weight: 500; }
+input[type=text], input[type=number], input[type=password], select, textarea {
+  font: inherit; color: var(--fg); background: #fbfcfb; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+textarea { width: 100%; font-family: var(--content); font-size: 1.05rem; line-height: 1.8; resize: vertical; min-height: 52px; }
+input.content { font-family: var(--content); font-size: 1.02rem; }
+input[type=number] { width: 72px; }
+button { font: inherit; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 6px 12px; cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+button.danger { color: var(--err); border-color: #f0b8b2; }
+button.small { padding: 2px 8px; font-size: .82rem; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.muted { color: var(--muted); }
+.hint { font-size: .82rem; color: var(--muted); }
+.status { font-size: .85rem; padding: 6px 10px; border-radius: 6px; background: var(--bg); }
+.status.err { background: var(--err-soft); color: var(--err); }
+.status.ok { background: var(--accent-soft); color: var(--accent); }
+.hidden { display: none !important; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: right; vertical-align: middle; }
+th { font-size: .78rem; color: var(--muted); font-weight: 500; background: var(--bg); }
+.unit-block { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+.unit-block .unit-title { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.unit-block .unit-title input { flex: 1; font-weight: 700; }
+.break-row { color: var(--muted); font-size: .85rem; }
+.issues { display: grid; gap: 4px; margin: 8px 0 0; padding: 0; list-style: none; }
+.issue { font-size: .85rem; padding: 5px 9px; border-radius: 6px; display: flex; gap: 8px; align-items: baseline; }
+.issue.error { background: var(--err-soft); color: var(--err); }
+.issue.warning { background: var(--warn-soft); color: var(--warn); }
+.issue.info { background: var(--info-soft); color: var(--info); }
+.issue .fr { font-size: .75rem; opacity: .8; direction: ltr; unicode-bidi: isolate; }
+.issue a { color: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; }
+.units-list { display: grid; gap: 8px; }
+.unit-line { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.unit-line .t { flex: 1; min-width: 200px; font-weight: 500; }
+.badge { font-size: .75rem; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); white-space: nowrap; }
+.badge.st-todo { color: var(--muted); }
+.badge.st-run { color: var(--info); border-color: var(--info); }
+.badge.st-review { color: var(--warn); border-color: var(--warn); }
+.badge.st-saved { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.progress { display: grid; gap: 3px; margin-top: 8px; font-size: .85rem; }
+.progress .ok { color: var(--accent); } .progress .ko { color: var(--err); } .progress .run { color: var(--info); }
+/* Relecture */
+.review { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 40%); gap: 16px; align-items: start; }
+@media (max-width: 1000px) { .review { grid-template-columns: 1fr; } }
+.lesson-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.lesson-tab { font-size: .85rem; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+.lesson-tab.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.lesson-tab .dot { display: inline-block; min-width: 18px; padding: 0 5px; margin-inline-start: 6px; border-radius: 99px; background: var(--warn-soft); color: var(--warn); font-size: .72rem; text-align: center; }
+.lesson-tab .dot.zero { background: var(--accent-soft); color: var(--accent); }
+.lesson-head { display: grid; gap: 8px; margin-bottom: 10px; }
+.counters { display: flex; flex-wrap: wrap; gap: 8px; }
+.counter { font-size: .8rem; padding: 3px 10px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
+.counter b { font-variant-numeric: tabular-nums; }
+.goal { border-inline-start: 3px solid var(--accent); padding-inline-start: 10px; margin: 14px 0; }
+.goal-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.goal-head input { flex: 1; min-width: 180px; font-weight: 700; }
+.skill { margin: 10px 0 0; padding: 10px; background: #f9fbfa; border: 1px solid var(--line); border-radius: 8px; }
+.skill-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.skill-head input { flex: 1; min-width: 180px; }
+.chunk { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-top: 8px; display: grid; gap: 8px; }
+.chunk.flag { border-color: #e9c46a; box-shadow: inset 4px 0 0 #e9c46a; }
+.chunk.flag.done { border-color: #9fd3bd; box-shadow: inset 4px 0 0 var(--accent); }
+.chunk.deleted { opacity: .45; }
+.chunk.deleted textarea, .chunk.deleted input { text-decoration: line-through; }
+.chunk-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.type { font-size: .78rem; font-weight: 700; padding: 2px 9px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.type.practice { background: #eef0ff; color: #3d3fb0; }
+.type.example { background: #f3ecff; color: #6a35b0; }
+.chunk-head .spacer { flex: 1; }
+.page-link { font-size: .78rem; cursor: pointer; color: var(--info); text-decoration: underline; background: none; border: none; padding: 0; }
+.edited-tag { font-size: .72rem; color: var(--info); }
+.ref { font-size: .72rem; color: var(--muted); background: var(--bg); padding: 0 6px; border-radius: 4px; }
+.options { display: grid; gap: 6px; }
+.option { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 6px; align-items: center; padding: 6px; border-radius: 6px; border: 1px solid var(--line); }
+.option.correct { border-color: #8ccfb3; background: #f2faf6; }
+.option .fb { grid-column: 2 / 5; }
+.option input.content { width: 100%; }
+.option .fb input { width: 100%; font-size: .9rem; }
+.verify { display: flex; gap: 8px; align-items: center; font-size: .85rem; padding: 6px 9px; border-radius: 6px; background: var(--warn-soft); color: var(--warn); }
+.verify.done { background: var(--accent-soft); color: var(--accent); }
+.image-box { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .85rem; padding: 6px 9px; border-radius: 6px; background: var(--info-soft); }
+.image-box img { max-height: 110px; max-width: 220px; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+.image-box.has { background: var(--accent-soft); }
+/* Livre */
+.book { position: sticky; top: 70px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; }
+.book-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.book-bar .pg { font-variant-numeric: tabular-nums; min-width: 90px; text-align: center; }
+.canvas-wrap { position: relative; overflow: auto; max-height: calc(100vh - 170px); border: 1px solid var(--line); border-radius: 6px; background: #eee; direction: ltr; }
+.canvas-wrap canvas { display: block; margin: 0 auto; }
+.canvas-wrap.cropping { cursor: crosshair; outline: 3px solid var(--warn); }
+#cropRect { position: absolute; border: 2px dashed var(--err); background: rgba(180,35,24,.08); pointer-events: none; }
+.crop-banner { font-size: .85rem; padding: 6px 9px; border-radius: 6px; background: var(--warn-soft); color: var(--warn); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.stat { border-top: 3px solid var(--accent); padding-top: 6px; }
+.stat .v { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat .k { font-size: .8rem; color: var(--muted); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+code { direction: ltr; unicode-bidi: isolate; font-size: .85em; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>فطين – محاكاة لوحة الإدارة: استيراد كتاب مدرسي</h1>
+    <div class="sub">رفع الكتاب ← الخطة ← معالجة الوحدات ← المراجعة بجانب صفحة الكتاب ← الحفظ</div>
+  </div>
+  <div class="steps" id="steps">
+    <span class="step-pill" data-step="1">١ الكتاب</span>
+    <span class="step-pill" data-step="2">٢ الخطة</span>
+    <span class="step-pill" data-step="3">٣ الوحدات</span>
+    <span class="step-pill" data-step="4">٤ المراجعة</span>
+    <span class="step-pill" data-step="5">٥ الحفظ</span>
+  </div>
+</header>
+
+<main>
+  <!-- 1. Le livre -->
+  <section class="card" id="s1">
+    <h2><span class="num">١</span> الكتاب ومعلومات المادة</h2>
+    <div class="row">
+      <div class="field"><label for="apiKey">مفتاح الخدمة (SERVICE_API_KEY)</label><input id="apiKey" type="password" size="22" autocomplete="off"></div>
+      <div class="field"><label for="provider">مزوّد الذكاء الاصطناعي</label>
+        <select id="provider">
+          <option value="">الافتراضي في ‎.env</option>
+          <option value="gemini">Gemini</option>
+          <option value="mistral">Mistral</option>
+          <option value="anthropic">Claude</option>
+          <option value="openai">GPT</option>
+          <option value="fake">تجريبي (بدون ذكاء اصطناعي، مجاني)</option>
+        </select></div>
+      <span class="hint" id="health"></span>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label for="book">ملف الكتاب (PDF)</label><input id="book" type="file" accept="application/pdf,.pdf"></div>
+      <div class="field"><label for="language">اللغة</label><select id="language"><option value="ar">العربية</option><option value="fr">الفرنسية</option></select></div>
+      <div class="field"><label for="stage">المرحلة</label><input id="stage" type="text" value="الابتدائية" size="12"></div>
+      <div class="field"><label for="level">المستوى</label><input id="level" type="text" value="السنة الأولى" size="12"></div>
+      <div class="field"><label for="subjectName">المادة</label><input id="subjectName" type="text" value="الرياضيات" size="12"></div>
+      <div class="field"><label for="subjectId">رقم المادة في فطين</label><input id="subjectId" type="number" value="16"></div>
+    </div>
+    <div class="toolbar" style="margin-top:12px">
+      <button class="primary" id="btnOutline">استخراج الخطة بالذكاء الاصطناعي</button>
+      <span class="muted">أو</span>
+      <label class="field" style="display:inline-grid"><span class="hint">تحميل خطة محفوظة (JSON)</span><input id="planFile" type="file" accept=".json,application/json"></label>
+    </div>
+    <div class="status hidden" id="s1Status" style="margin-top:10px"></div>
+  </section>
+
+  <!-- 2. Le plan -->
+  <section class="card hidden" id="s2">
+    <h2><span class="num">٢</span> الخطة المقترحة: راجعها وصحّحها قبل البدء</h2>
+    <p class="hint">يمكنك تعديل عناوين الوحدات والدروس وأرقام الصفحات، وحذف درس أو إضافته. أرقام الصفحات هي ترتيب الصفحة داخل ملف PDF.</p>
+    <div id="planEditor"></div>
+    <ul class="issues" id="planIssues"></ul>
+    <div class="toolbar" style="margin-top:12px">
+      <button id="btnCheckPlan">إعادة فحص الخطة</button>
+      <button class="primary" id="btnApprovePlan">اعتماد الخطة</button>
+      <button id="btnDownloadPlan">تنزيل الخطة (JSON)</button>
+    </div>
+  </section>
+
+  <!-- 3. Les unités -->
+  <section class="card hidden" id="s3">
+    <h2><span class="num">٣</span> الوحدات: عالج وحدة واحدة في كل مرة</h2>
+    <div class="units-list" id="unitsList"></div>
+    <div class="progress" id="progress"></div>
+  </section>
+
+  <!-- 4. La relecture -->
+  <section class="card hidden" id="s4">
+    <h2><span class="num">٤</span> مراجعة الوحدة <span id="reviewUnitTitle" class="muted"></span></h2>
+    <div class="toolbar" style="margin-bottom:10px">
+      <label><input type="checkbox" id="onlyFlags"> إظهار ما يحتاج تدخلًا فقط</label>
+      <button id="btnRevalidate">إعادة فحص الوحدة</button>
+      <span class="hint" id="reviewHint"></span>
+    </div>
+    <ul class="issues" id="unitIssues"></ul>
+    <div class="review">
+      <div>
+        <div class="lesson-tabs" id="lessonTabs"></div>
+        <div id="lessonView"></div>
+      </div>
+      <aside class="book" id="bookPanel">
+        <div class="book-bar">
+          <button class="small" id="pgPrev" aria-label="الصفحة السابقة">→</button>
+          <span class="pg" id="pgLabel">—</span>
+          <button class="small" id="pgNext" aria-label="الصفحة التالية">←</button>
+          <input type="number" id="pgInput" min="1" aria-label="رقم الصفحة">
+          <button class="small" id="pgGo">اذهب</button>
+          <button class="small" id="zoomOut" aria-label="تصغير">−</button>
+          <button class="small" id="zoomIn" aria-label="تكبير">+</button>
+        </div>
+        <div class="crop-banner hidden" id="cropBanner">ارسم مستطيلًا على الصفحة حول الصورة المطلوبة. <button class="small" id="cropCancel">إلغاء</button></div>
+        <div class="canvas-wrap" id="canvasWrap"><canvas id="pageCanvas"></canvas><div id="cropRect" class="hidden"></div></div>
+        <div class="hint" id="bookHint">اختر ملف الكتاب في الخطوة ١ لعرض الصفحات.</div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 5. Enregistrement -->
+  <section class="card hidden" id="s5">
+    <h2><span class="num">٥</span> حفظ الوحدة في قاعدة البيانات (محاكاة)</h2>
+    <p class="hint">لا توجد قاعدة بيانات هنا: يُحفظ اقتراح الذكاء الاصطناعي ونسخة المشرف والصور والإحصاءات في مجلد على الخادم (CMS_SAVE_DIR في ‎.env).</p>
+    <ul class="issues" id="saveIssues"></ul>
+    <div class="toolbar">
+      <button class="primary" id="btnSave">حفظ الوحدة</button>
+      <button class="danger hidden" id="btnSaveAnyway">حفظ رغم الأخطاء</button>
+    </div>
+    <div class="status hidden" id="saveStatus" style="margin-top:10px"></div>
+    <div class="stats hidden" id="stats" style="margin-top:12px"></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+"use strict";
+// ---------- Libellés ----------
+const TYPES = { rule: "قاعدة", example: "مثال", practice: "تمرين", error: "خطأ شائع", hint: "تلميح", real_life: "من الحياة اليومية" };
+const ORIGINS = { extracted: "من الكتاب", proposed: "مقترح من الذكاء الاصطناعي" };
+const ERRCAT = { concept: "خطأ في المفهوم", procedure: "خطأ في الطريقة", careless: "سهو" };
+const GOALS = { conceptual: "هدف معرفي (فهم)", operational: "هدف إجرائي (تطبيق)" };
+const CODES = {
+  ANSWER_FROM_PICTURE: "تحقّق من الإجابة الصحيحة على صفحة الكتاب: تعتمد على قراءة الصورة",
+  IMAGE_NEEDED: "صورة مطلوبة من الكتاب",
+  IMAGE_REFERENCE: "النص يذكر صورة، ولا توجد صورة",
+  LESSON_MISSING: "لم تتم معالجة هذا الدرس",
+  LINKS_FAILED: "تعذّر اقتراح الروابط بين الدروس",
+  PREREQ_LATER: "مكتسب قبلي يأتي لاحقًا في الكتاب",
+  LINK_UNKNOWN: "رابط بين الدروس غير معروف",
+  LESSON_GOALS: "يجب أن يكون للدرس هدفان",
+  SKILL_MIN_CHUNKS: "عدد العناصر في المهارة غير كافٍ",
+  ONE_CORRECT: "يجب أن تكون هناك إجابة صحيحة واحدة",
+  PRACTICE_OPTIONS: "يحتاج التمرين إلى إجابتين على الأقل",
+  WRONG_NO_ERROR: "الإجابة الخاطئة بلا نوع خطأ",
+  CORRECT_HAS_ERROR: "الإجابة الصحيحة لا تحمل نوع خطأ",
+  WRONG_NO_FEEDBACK: "الإجابة الخاطئة بلا رسالة للتلميذ",
+  LANGUAGE_MISMATCH: "لغة النص غير مناسبة",
+  ARABIC_BROKEN: "نص عربي تالف",
+  PAGE_OVERLAP: "تداخل في الصفحات", PAGE_GAP: "صفحات خارج الدروس", PAGE_ORDER: "ترتيب صفحات خاطئ",
+  PAGE_OUT_OF_RANGE: "صفحة خارج الكتاب", UNIT_TOO_LARGE: "وحدة كبيرة جدًا", UNIT_TOO_SMALL: "وحدة صغيرة جدًا",
+  LESSON_TOO_LONG: "درس طويل جدًا", LESSON_DUPLICATE_TITLE: "عنوان درس مكرر", UNIT_NO_LESSONS: "وحدة بلا دروس",
+};
+const LEVEL = { error: "خطأ", warning: "تنبيه" };
+
+// ---------- État (gardé dans le navigateur, sauf le PDF) ----------
+const $ = (id) => document.getElementById(id);
+let S = { plan: null, totalPages: null, bookName: "", planIssues: [], units: {}, current: null };
+let bookFile = null, pdfDoc = null, page = 1, zoom = 1.0, crop = null;
+const STORE = "fatin-cms-sim";
+function save() { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) { /* trop gros ou interdit : on continue */ } }
+function load() { try { const v = JSON.parse(localStorage.getItem(STORE) || "null"); if (v) S = Object.assign(S, v); } catch (e) {} }
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function meta() {
+  return { language: $("language").value, stage: $("stage").value, level: $("level").value,
+           subject_name: $("subjectName").value, subject: Number($("subjectId").value || 0), provider: $("provider").value };
+}
+function headers(json) {
+  const h = { "X-API-Key": $("apiKey").value };
+  if (json) h["Content-Type"] = "application/json";
+  return h;
+}
+async function api(path, { form, body } = {}) {
+  const res = await fetch(path, { method: "POST", headers: headers(!form), body: form || JSON.stringify(body) });
+  let data = null;
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) {
+    const d = data && data.detail;
+    const msg = typeof d === "string" ? d : (d && (d.message || JSON.stringify(d))) || res.statusText;
+    const err = new Error(`${res.status} : ${msg}`); err.status = res.status; throw err;
+  }
+  return data;
+}
+function setStatus(el, text, kind) { el.textContent = text; el.className = "status " + (kind || ""); el.classList.remove("hidden"); }
+function showStep(n) {
+  for (let i = 1; i <= 5; i++) $("s" + i).classList.toggle("hidden", i > n && !(i === 1));
+  document.querySelectorAll(".step-pill").forEach((p) => p.classList.toggle("on", Number(p.dataset.step) === n));
+}
+function issueHTML(i, onPage) {
+  const label = CODES[i.code] || i.code;
+  const pageMatch = /page (\d+)/.exec(i.message || "");
+  const link = pageMatch && onPage ? ` <a data-page="${pageMatch[1]}">صفحة ${pageMatch[1]}</a>` : "";
+  return `<li class="issue ${i.level}"><b>${LEVEL[i.level] || i.level}</b><span>${esc(label)}${link}</span><span class="fr">${esc(i.message)}</span></li>`;
+}
+
+// ---------- 1. Livre et plan ----------
+async function health() {
+  try { const r = await (await fetch("/health")).json(); $("health").textContent = `الخدمة تعمل · المزوّد الافتراضي: ${r.provider}`; }
+  catch (e) { $("health").textContent = "الخدمة لا تستجيب"; }
+}
+$("apiKey").addEventListener("change", () => { try { sessionStorage.setItem("fatin-key", $("apiKey").value); } catch (e) {} });
+$("book").addEventListener("change", async () => {
+  bookFile = $("book").files[0] || null;
+  if (!bookFile) return;
+  S.bookName = bookFile.name; save();
+  try {
+    pdfDoc = await pdfjsLib.getDocument({ data: await bookFile.arrayBuffer() }).promise;
+    S.totalPages = pdfDoc.numPages; save();
+    $("bookHint").textContent = `${bookFile.name} · ${pdfDoc.numPages} صفحة`;
+    setStatus($("s1Status"), `تم تحميل الكتاب: ${pdfDoc.numPages} صفحة.`, "ok");
+    renderPage(page);
+  } catch (e) { setStatus($("s1Status"), "تعذّرت قراءة ملف PDF: " + e.message, "err"); }
+});
+$("btnOutline").addEventListener("click", async () => {
+  if (!bookFile) return setStatus($("s1Status"), "اختر ملف الكتاب أولًا.", "err");
+  const m = meta(), f = new FormData();
+  f.append("file", bookFile); ["language", "stage", "level", "subject_name"].forEach((k) => f.append(k, m[k]));
+  if (m.provider) f.append("provider", m.provider);
+  $("btnOutline").disabled = true;
+  setStatus($("s1Status"), "الذكاء الاصطناعي يقرأ الكتاب كاملًا ويقترح الخطة… (دقيقة تقريبًا)");
+  try {
+    const r = await api("/api/outline/", { form: f });
+    S.plan = r.outline; S.totalPages = r.total_pages; S.planIssues = r.issues; S.units = {}; save();
+    setStatus($("s1Status"), `الخطة جاهزة: ${r.outline.units.length} وحدات · المدة ${r.meta.duration_seconds} ث · ${r.meta.model}`, "ok");
+    renderPlan(); showStep(2);
+  } catch (e) { setStatus($("s1Status"), "فشل استخراج الخطة: " + e.message, "err"); }
+  finally { $("btnOutline").disabled = false; }
+});
+$("planFile").addEventListener("change", async () => {
+  const f = $("planFile").files[0]; if (!f) return;
+  try {
+    const raw = JSON.parse(await f.text()); S.plan = raw.outline || raw; S.units = {}; S.planIssues = []; save();
+    setStatus($("s1Status"), `تم تحميل الخطة: ${S.plan.units.length} وحدات.`, "ok");
+    renderPlan(); showStep(2); if (S.totalPages) checkPlan();
+  } catch (e) { setStatus($("s1Status"), "ملف الخطة غير صالح: " + e.message, "err"); }
+});
+
+function renderPlan() {
+  const p = S.plan; if (!p) return;
+  const breaks = (p.breaks || []).map((b) => `<div class="break-row">▓ ${esc(b.title)} · الصفحات ${b.start_page}–${b.end_page}</div>`).join("");
+  $("planEditor").innerHTML = p.units.map((u, ui) => `
+    <div class="unit-block">
+      <div class="unit-title"><span class="badge">الوحدة ${ui + 1}</span>
+        <input type="text" data-u="${ui}" data-k="title" value="${esc(u.title)}" aria-label="عنوان الوحدة">
+        <span class="hint">${u.origin === "proposed" ? "مقترحة" : "من الكتاب"}</span>
+        ${u.lessons.length ? "" : `<button class="small danger" data-del-unit="${ui}">حذف هذه الوحدة الفارغة</button>`}</div>
+      <table><thead><tr><th>#</th><th>عنوان الدرس</th><th>من صفحة</th><th>إلى صفحة</th><th>${p.units.length > 1 ? "نقل إلى" : ""}</th><th></th></tr></thead><tbody>
+      ${u.lessons.map((l, li) => `<tr>
+        <td>${li + 1}</td>
+        <td><input class="content" type="text" style="width:100%" data-u="${ui}" data-l="${li}" data-k="title" value="${esc(l.title)}"></td>
+        <td><input type="number" min="1" data-u="${ui}" data-l="${li}" data-k="start_page" value="${l.start_page}"></td>
+        <td><input type="number" min="1" data-u="${ui}" data-l="${li}" data-k="end_page" value="${l.end_page}"></td>
+        <td>${p.units.length > 1 ? `<select data-move="${ui}:${li}" aria-label="نقل الدرس إلى وحدة أخرى"><option value="">—</option>${
+          p.units.map((x, xi) => xi === ui ? "" : `<option value="${xi}">الوحدة ${xi + 1}: ${esc(x.title).slice(0, 30)}</option>`).join("")}</select>` : ""}</td>
+        <td><button class="small" data-show="${l.start_page}">عرض</button> <button class="small danger" data-del="${ui}:${li}">حذف</button></td></tr>`).join("")}
+      </tbody></table>
+      <button class="small" data-add="${ui}" style="margin-top:6px">+ إضافة درس</button>
+    </div>`).join("") + (breaks ? `<div class="unit-block"><b>صفحات التقويم والإدماج (ليست دروسًا)</b>${breaks}</div>` : "");
+  $("planIssues").innerHTML = (S.planIssues || []).map((i) => issueHTML(i)).join("") ||
+    `<li class="issue info"><span>لا توجد مشاكل في الخطة.</span></li>`;
+}
+$("planEditor").addEventListener("input", (e) => {
+  const t = e.target, u = t.dataset.u, l = t.dataset.l, k = t.dataset.k; if (u === undefined || !k) return;
+  const target = l === undefined ? S.plan.units[u] : S.plan.units[u].lessons[l];
+  target[k] = t.type === "number" ? Number(t.value) : t.value; save();
+});
+// Changer les leçons d'une unité déjà traitée rend son contenu faux : on prévient, puis on la remet à « لم تبدأ ».
+// (Les fichiers déjà enregistrés restent dans le dossier.)
+function planChangeOK(unitNumbers) {
+  const done = [...new Set(unitNumbers)].filter((n) => S.units[n] && S.units[n].status !== "todo");
+  if (!done.length) return true;
+  if (!confirm(`الوحدة ${done.join(" و ")} تمت معالجتها بالخطة القديمة. سيُلغى عملها في الصفحة ويجب إعادة معالجتها. متابعة؟`)) return false;
+  done.forEach((n) => { delete S.units[n]; if (S.current && S.current.unit === n) { S.current = null; $("s4").classList.add("hidden"); $("s5").classList.add("hidden"); } });
+  return true;
+}
+function planChanged() { S.planIssues = []; save(); renderPlan(); renderUnits(); if (S.totalPages) checkPlan(); }
+$("planEditor").addEventListener("change", (e) => {
+  const t = e.target; if (!t.dataset.move || t.value === "") return;
+  const [from, li] = t.dataset.move.split(":").map(Number), to = Number(t.value);
+  if (!planChangeOK([from + 1, to + 1])) { t.value = ""; return; }
+  const [lesson] = S.plan.units[from].lessons.splice(li, 1);
+  const dest = S.plan.units[to].lessons;  // rangée à sa place d'après sa première page
+  const pos = dest.findIndex((x) => x.start_page > lesson.start_page);
+  dest.splice(pos < 0 ? dest.length : pos, 0, lesson);
+  planChanged();
+});
+$("planEditor").addEventListener("click", (e) => {
+  const t = e.target;
+  if (t.dataset.delUnit) {
+    const ui = Number(t.dataset.delUnit);
+    if (!planChangeOK([ui + 1])) return;
+    S.plan.units.splice(ui, 1);
+    const shifted = {};  // les unités suivantes avancent d'un numéro
+    Object.entries(S.units).forEach(([n, v]) => { n = Number(n); shifted[n > ui + 1 ? n - 1 : n] = v; });
+    S.units = shifted; if (S.current && S.current.unit > ui + 1) S.current.unit--;
+    planChanged();
+  }
+  if (t.dataset.del) { const [u, l] = t.dataset.del.split(":").map(Number); if (!planChangeOK([u + 1])) return; S.plan.units[u].lessons.splice(l, 1); planChanged(); }
+  if (t.dataset.add) { if (!planChangeOK([Number(t.dataset.add) + 1])) return;
+    const u = S.plan.units[Number(t.dataset.add)]; const last = u.lessons[u.lessons.length - 1];
+    const p0 = last ? last.end_page + 1 : 1; u.lessons.push({ title: "درس جديد", start_page: p0, end_page: p0 + 1 }); planChanged(); }
+  if (t.dataset.show) { showStep(Math.max(currentStep(), 2)); $("s4").classList.remove("hidden"); renderPage(Number(t.dataset.show)); $("bookPanel").scrollIntoView({ behavior: "smooth" }); }
+});
+async function checkPlan() {
+  if (!S.totalPages) return setStatus($("s1Status"), "اختر ملف الكتاب لمعرفة عدد صفحاته.", "err");
+  try { S.planIssues = await api("/api/cms/check-outline/", { body: { outline: S.plan, total_pages: S.totalPages } }); save(); renderPlan(); }
+  catch (e) { S.planIssues = [{ code: "CHECK", level: "error", path: "", message: e.message }]; renderPlan(); }
+}
+$("btnCheckPlan").addEventListener("click", checkPlan);
+$("btnApprovePlan").addEventListener("click", async () => {
+  await checkPlan();
+  if ((S.planIssues || []).some((i) => i.level === "error")) return;
+  renderUnits(); showStep(3); $("s3").scrollIntoView({ behavior: "smooth" });
+});
+$("btnDownloadPlan").addEventListener("click", () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S.plan, null, 2)], { type: "application/json" }));
+  a.download = (S.bookName || "livre").replace(/\.pdf$/i, "") + "_plan.json"; a.click();
+});
+function currentStep() { return Number((document.querySelector(".step-pill.on") || { dataset: { step: 1 } }).dataset.step); }
+
+// ---------- 3. Traitement d'une unité ----------
+const UNIT_STATUS = { todo: ["st-todo", "لم تبدأ"], run: ["st-run", "قيد المعالجة"], review: ["st-review", "جاهزة للمراجعة"], saved: ["st-saved", "محفوظة"] };
+function renderUnits() {
+  $("unitsList").innerHTML = S.plan.units.map((u, ui) => {
+    const st = (S.units[ui + 1] || {}).status || "todo"; const [cls, lab] = UNIT_STATUS[st];
+    return `<div class="unit-line"><span class="badge">${ui + 1}</span><span class="t">${esc(u.title)} <span class="hint">(${u.lessons.length} دروس)</span></span>
+      <span class="badge ${cls}">${lab}</span>
+      <button class="${st === "todo" ? "primary" : ""}" data-run="${ui + 1}">${st === "todo" ? "معالجة الوحدة" : "إعادة المعالجة"}</button>
+      ${st === "review" || st === "saved" ? `<button data-open="${ui + 1}">فتح المراجعة</button>` : ""}</div>`;
+  }).join("");
+}
+$("unitsList").addEventListener("click", (e) => {
+  if (e.target.dataset.run) runUnit(Number(e.target.dataset.run));
+  if (e.target.dataset.open) openReview(Number(e.target.dataset.open));
+});
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function runUnit(n) {
+  if (!bookFile) { setStatus($("s1Status"), "اختر ملف الكتاب في الخطوة ١ (نفس الملف).", "err"); $("s1").scrollIntoView(); return; }
+  const unit = S.plan.units[n - 1], m = meta();
+  S.units[n] = { status: "run", lessons: {}, startedAt: null }; renderUnits();
+  const prog = $("progress"); prog.innerHTML = "";
+  const t0 = Date.now();
+  for (let li = 1; li <= unit.lessons.length; li++) {
+    const l = unit.lessons[li - 1];
+    const line = document.createElement("div"); line.className = "run";
+    line.textContent = `⏳ الدرس ${li}/${unit.lessons.length}: ${l.title} (الصفحات ${l.start_page}–${l.end_page})…`; prog.appendChild(line);
+    const f = new FormData();
+    f.append("file", bookFile); f.append("outline", JSON.stringify(S.plan)); f.append("unit_index", n); f.append("lesson_index", li);
+    ["language", "stage", "level", "subject_name"].forEach((k) => f.append(k, m[k])); if (m.provider) f.append("provider", m.provider);
+    const ts = Date.now();
+    try {
+      const r = await api("/api/parse-lesson/", { form: f });
+      S.units[n].lessons[li] = r;
+      const nb = r.lesson.goals.reduce((a, g) => a + g.skills.reduce((b, s) => b + s.chunks.length, 0), 0);
+      line.className = "ok"; line.textContent = `✔ الدرس ${li}: ${l.title} · ${nb} عناصر · ${((Date.now() - ts) / 1000).toFixed(0)} ث`;
+    } catch (e) {
+      line.className = "ko"; line.textContent = `✘ الدرس ${li}: ${l.title} · ${e.message}`;
+      if (e.status === 429) { prog.insertAdjacentHTML("beforeend", `<div class="ko">انتهت حصة الذكاء الاصطناعي: توقّفت المعالجة. أعد المحاولة لاحقًا.</div>`); break; }
+    }
+    save();
+    if (li < unit.lessons.length) await sleep(3000);
+  }
+  const line = document.createElement("div"); line.className = "run"; line.textContent = "⏳ الربط بين الدروس والفحص النهائي للوحدة…"; prog.appendChild(line);
+  const parts = Object.entries(S.units[n].lessons).map(([li, r]) => ({ unit_index: n, lesson_index: Number(li), lesson: r.lesson }));
+  try {
+    const r = await api("/api/assemble/", { body: { subject: m.subject, source_file: S.bookName, language: m.language, outline: S.plan,
+      lessons: parts, units: [n], find_links: true, provider: m.provider || null,
+      stage: m.stage, level: m.level, subject_name: m.subject_name } });
+    Object.assign(S.units[n], { status: "review", draftAI: clone(r.draft), draft: clone(r.draft), issues: r.issues,
+      aiIssues: clone(r.issues), deleted: {}, verified: {}, images: {}, startedAt: Date.now(), aiSeconds: Math.round((Date.now() - t0) / 1000) });
+    line.className = "ok"; line.textContent = `✔ الوحدة جاهزة للمراجعة · ${S.units[n].aiSeconds} ث`;
+    save(); renderUnits(); openReview(n);
+  } catch (e) { line.className = "ko"; line.textContent = "✘ فشل التجميع: " + e.message; S.units[n].status = "todo"; renderUnits(); }
+}
+
+// ---------- 4. Relecture ----------
+function U() { return S.current && S.units[S.current.unit]; }
+function chunkPath(li, gi, si, ci) { return `units[0].lessons[${li}].goals[${gi}].skills[${si}].chunks[${ci}]`; }
+function issuesFor(prefix, exact) {
+  return (U().issues || []).filter((i) => exact ? i.path === prefix : (i.path === prefix || i.path.startsWith(prefix + ".") || i.path.startsWith(prefix + "[")));
+}
+function isFlag(i) { return i.code === "ANSWER_FROM_PICTURE"; }
+function openReview(n) {
+  S.current = { unit: n, lesson: 0 }; save();
+  $("reviewUnitTitle").textContent = `${n}: ${S.plan.units[n - 1].title}`;
+  showStep(4); $("s4").classList.remove("hidden"); $("s5").classList.remove("hidden");
+  renderReview(); $("s4").scrollIntoView({ behavior: "smooth" });
+}
+function lessonFlags(li) {
+  const u = U(); const pre = `units[0].lessons[${li}]`;
+  const flags = (u.aiIssues || []).filter((i) => isFlag(i) && i.path.startsWith(pre));
+  const todo = flags.filter((i) => !u.verified[i.path] && !u.deleted[i.path]).length;
+  const images = (u.issues || []).filter((i) => i.code === "IMAGE_NEEDED" && i.path.startsWith(pre) && !u.images[i.path] && !u.deleted[i.path]).length;
+  const errors = (u.issues || []).filter((i) => i.level === "error" && i.path.startsWith(pre)).length;
+  return { flags: flags.length, todo, images, errors };
+}
+function renderReview() {
+  const u = U(); const lessons = u.draft.units[0].lessons;
+  const unitLevel = (u.issues || []).filter((i) => !/^units\[0\]\.lessons\[\d+\]/.test(i.path));
+  $("unitIssues").innerHTML = unitLevel.map((i) => issueHTML(i)).join("");
+  $("lessonTabs").innerHTML = lessons.map((l, li) => {
+    const f = lessonFlags(li); const n = f.todo + f.images + f.errors;
+    return `<button class="lesson-tab ${li === S.current.lesson ? "on" : ""}" data-lesson="${li}">${li + 1}. ${esc(l.title)}<span class="dot ${n ? "" : "zero"}">${n || "✓"}</span></button>`;
+  }).join("");
+  renderLesson();
+  const total = lessons.reduce((a, l, li) => { const f = lessonFlags(li); return { todo: a.todo + f.todo, images: a.images + f.images, errors: a.errors + f.errors }; }, { todo: 0, images: 0, errors: 0 });
+  $("reviewHint").textContent = `متبقٍّ في الوحدة: ${total.todo} إجابة للتحقق · ${total.images} صورة للإضافة · ${total.errors} خطأ`;
+}
+$("lessonTabs").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-lesson]"); if (!b) return;
+  S.current.lesson = Number(b.dataset.lesson); save(); renderReview();
+  const l = U().draft.units[0].lessons[S.current.lesson]; const planned = S.plan.units[S.current.unit - 1].lessons[S.current.lesson];
+  renderPage((planned && planned.start_page) || l.source_page || 1);
+});
+$("onlyFlags").addEventListener("change", renderLesson);
+
+function renderLesson() {
+  const u = U(); const li = S.current.lesson; const lesson = u.draft.units[0].lessons[li];
+  if (!lesson) { $("lessonView").innerHTML = ""; return; }
+  const planned = S.plan.units[S.current.unit - 1].lessons[li] || {};
+  const f = lessonFlags(li); const only = $("onlyFlags").checked;
+  const lp = `units[0].lessons[${li}]`;
+  const lessonIssues = (u.issues || []).filter((i) => i.path === lp || i.path === lp + ".goals");
+  let html = `<div class="lesson-head">
+    <input class="content" type="text" data-edit="${lp}.title" value="${esc(lesson.title)}" aria-label="عنوان الدرس" style="font-weight:700;font-size:1.1rem">
+    <div class="counters">
+      <span class="counter">الصفحات <b>${planned.start_page || "?"}–${planned.end_page || "?"}</b></span>
+      <span class="counter">إجابات للتحقق <b>${f.flags - f.todo}/${f.flags}</b></span>
+      <span class="counter">صور متبقية <b>${f.images}</b></span>
+      <span class="counter">أخطاء <b>${f.errors}</b></span>
+    </div><ul class="issues">${lessonIssues.map((i) => issueHTML(i, true)).join("")}</ul></div>`;
+  lesson.goals.forEach((g, gi) => {
+    const gp = `${lp}.goals[${gi}]`;
+    html += `<div class="goal"><div class="goal-head"><span class="badge">${GOALS[g.goal_type] || g.goal_type}</span>
+      <input type="text" class="content" data-edit="${gp}.title" value="${esc(g.title)}" aria-label="عنوان الهدف"></div>`;
+    g.skills.forEach((s, si) => {
+      const sp = `${gp}.skills[${si}]`;
+      html += `<div class="skill"><div class="skill-head"><span class="badge">مهارة</span>
+        <input type="text" class="content" data-edit="${sp}.name" value="${esc(s.name)}" aria-label="اسم المهارة">
+        <span class="hint">${s.prerequisites.length ? "مكتسبات قبلية: " + s.prerequisites.map(esc).join("، ") : ""}</span></div>`;
+      s.chunks.forEach((c, ci) => { html += renderChunk(c, chunkPath(li, gi, si, ci), only); });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  });
+  $("lessonView").innerHTML = html;
+}
+function originalOf(path) { return getAt(U().draftAI, path); }
+function getAt(root, path) {
+  return path.replace(/\[(\d+)\]/g, ".$1").split(".").reduce((o, k) => (o == null ? o : o[k]), root);
+}
+function setAt(root, path, value) {
+  const keys = path.replace(/\[(\d+)\]/g, ".$1").split("."); const last = keys.pop();
+  const obj = keys.reduce((o, k) => o[k], root); obj[last] = value;
+}
+function chunkEdited(path) {
+  const now = getAt(U().draft, path), before = originalOf(path);
+  return JSON.stringify(now) !== JSON.stringify(before);
+}
+function renderChunk(c, path, only) {
+  const u = U(); const iss = issuesFor(path);
+  const flag = (u.aiIssues || []).find((i) => isFlag(i) && i.path === path);
+  const needsImg = iss.find((i) => i.code === "IMAGE_NEEDED") || c.needs_image;
+  const hasImg = u.images[path]; const deleted = u.deleted[path];
+  const pending = (flag && !u.verified[path]) || (needsImg && !hasImg) || iss.some((i) => i.level === "error");
+  if (only && !pending && !deleted) return "";
+  const cls = ["chunk", flag ? "flag" : "", flag && u.verified[path] ? "done" : "", deleted ? "deleted" : ""].join(" ");
+  const other = iss.filter((i) => i.code !== "IMAGE_NEEDED" && i.code !== "ANSWER_FROM_PICTURE");
+  let h = `<div class="${cls}" data-chunk="${path}">
+    <div class="chunk-head"><span class="type ${c.chunk_type}">${TYPES[c.chunk_type] || c.chunk_type}</span>
+      <span class="hint">${ORIGINS[c.origin] || c.origin}</span>
+      ${c.ref ? `<code class="ref" title="الاسم الثابت للعنصر (Chunk.code)">${esc(c.ref)}</code>` : ""}
+      ${c.source_page ? `<button class="page-link" data-page="${c.source_page}">صفحة ${c.source_page}</button>` : ""}
+      ${chunkEdited(path) ? `<span class="edited-tag">✎ معدّل</span>` : ""}
+      <span class="spacer"></span>
+      <button class="small ${deleted ? "" : "danger"}" data-toggle-delete="${path}">${deleted ? "استرجاع" : "حذف"}</button></div>`;
+  if (flag) {
+    const ok = u.verified[path];
+    h += `<label class="verify ${ok ? "done" : ""}"><input type="checkbox" data-verify="${path}" ${ok ? "checked" : ""}>
+      ${ok ? "تم التحقق من الإجابة على صفحة الكتاب" : `تحقّق من الإجابة الصحيحة على <button class="page-link" data-page="${c.source_page || ""}">الصفحة ${c.source_page || "؟"}</button>: تعتمد على قراءة الصورة`}</label>`;
+  }
+  h += `<input class="content" type="text" placeholder="عنوان (اختياري)" data-edit="${path}.title" value="${esc(c.title || "")}">
+    <textarea data-edit="${path}.content" rows="2">${esc(c.content)}</textarea>`;
+  if (c.chunk_type === "practice") {
+    h += `<div class="options">${(c.options || []).map((o, oi) => `
+      <div class="option ${o.is_correct ? "correct" : ""}">
+        <label title="الإجابة الصحيحة"><input type="radio" name="ok-${path}" data-correct="${path}" data-oi="${oi}" ${o.is_correct ? "checked" : ""}> صحيحة</label>
+        <input class="content" type="text" data-edit="${path}.options[${oi}].text" value="${esc(o.text)}" aria-label="نص الإجابة">
+        <select data-edit="${path}.options[${oi}].error_category" ${o.is_correct ? "disabled" : ""} aria-label="نوع الخطأ">
+          <option value="">—</option>${Object.entries(ERRCAT).map(([k, v]) => `<option value="${k}" ${o.error_category === k ? "selected" : ""}>${v}</option>`).join("")}
+        </select>
+        <button class="small danger" data-del-option="${path}" data-oi="${oi}" aria-label="حذف الإجابة">✕</button>
+        <div class="fb"><input type="text" class="content" placeholder="رسالة للتلميذ" data-edit="${path}.options[${oi}].feedback" value="${esc(o.feedback || "")}"></div>
+      </div>`).join("")}
+      <button class="small" data-add-option="${path}">+ إضافة إجابة</button></div>`;
+  }
+  if (needsImg || hasImg) {
+    h += `<div class="image-box ${hasImg ? "has" : ""}">
+      ${hasImg ? `<img src="${hasImg}" alt="الصورة المضافة">` : `<span>🖼 صورة مطلوبة: ${esc(c.image_note || "انظر صفحة الكتاب")}</span>`}
+      <button class="small" data-crop="${path}" data-page="${c.source_page || ""}">قصّ من صفحة الكتاب</button>
+      <label class="small"><input type="file" accept="image/*" data-upload="${path}" style="max-width:170px"></label>
+      ${hasImg ? `<button class="small danger" data-remove-image="${path}">إزالة الصورة</button>` : ""}</div>`;
+  }
+  if (other.length) h += `<ul class="issues">${other.map((i) => issueHTML(i, true)).join("")}</ul>`;
+  return h + `</div>`;
+}
+// Édition : on écrit directement dans le brouillon de l'admin
+$("lessonView").addEventListener("input", (e) => {
+  const t = e.target; const p = t.dataset.edit; if (!p) return;
+  let v = t.value; if (t.tagName === "SELECT") v = v || null;
+  if (p.endsWith(".title") && v === "" && /chunks\[\d+\]\.title$/.test(p)) v = null;
+  setAt(U().draft, p, v); save();
+  const card = t.closest("[data-chunk]");
+  if (card && !card.querySelector(".edited-tag") && chunkEdited(card.dataset.chunk)) card.querySelector(".spacer").insertAdjacentHTML("beforebegin", `<span class="edited-tag">✎ معدّل</span>`);
+});
+$("lessonView").addEventListener("change", (e) => {
+  const t = e.target, u = U();
+  if (t.dataset.verify) { u.verified[t.dataset.verify] = t.checked; save(); renderReview(); }
+  if (t.dataset.correct) {
+    const opts = getAt(u.draft, t.dataset.correct + ".options");
+    opts.forEach((o, i) => { o.is_correct = i === Number(t.dataset.oi); if (o.is_correct) o.error_category = null; else if (!o.error_category) o.error_category = "concept"; });
+    save(); renderLesson();
+  }
+  if (t.dataset.upload && t.files[0]) {
+    const r = new FileReader(); r.onload = () => { u.images[t.dataset.upload] = r.result; save(); renderReview(); }; r.readAsDataURL(t.files[0]);
+  }
+});
+$("lessonView").addEventListener("click", (e) => {
+  const t = e.target, u = U();
+  if (t.dataset.page) { renderPage(Number(t.dataset.page)); }
+  if (t.dataset.toggleDelete) { const p = t.dataset.toggleDelete; u.deleted[p] = !u.deleted[p]; save(); renderReview(); }
+  if (t.dataset.delOption) { const opts = getAt(u.draft, t.dataset.delOption + ".options"); opts.splice(Number(t.dataset.oi), 1); opts.forEach((o, i) => (o.id = "abcdefgh"[i])); save(); renderLesson(); }
+  if (t.dataset.addOption) { const opts = getAt(u.draft, t.dataset.addOption + ".options");
+    opts.push({ id: "abcdefgh"[opts.length], text: "إجابة جديدة", is_correct: false, error_category: "concept", feedback: "" }); save(); renderLesson(); }
+  if (t.dataset.removeImage) { delete u.images[t.dataset.removeImage]; save(); renderReview(); }
+  if (t.dataset.crop) { startCrop(t.dataset.crop, Number(t.dataset.page) || page); }
+});
+document.addEventListener("click", (e) => { const a = e.target.closest(".issue a[data-page]"); if (a) renderPage(Number(a.dataset.page)); });
+
+$("btnRevalidate").addEventListener("click", async () => {
+  const u = U();
+  try { const f = finalDraft(); const r = await api("/api/validate/", { body: f.draft });
+    u.issues = remapIssues(r.issues, f.back); save(); renderReview();
+    $("reviewHint").textContent += r.valid ? " · ✔ لا أخطاء" : ` · ${r.issues.filter((i) => i.level === "error").length} أخطاء`;
+  } catch (e) { $("reviewHint").textContent = "فشل الفحص: " + e.message; }
+});
+
+// ---------- Livre : pdf.js, pages et découpe d'images ----------
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+let renderTask = null;
+async function renderPage(n) {
+  if (!pdfDoc) { $("bookHint").textContent = "اختر ملف الكتاب في الخطوة ١ لعرض الصفحات."; return; }
+  page = Math.min(Math.max(1, n || 1), pdfDoc.numPages);
+  $("pgLabel").textContent = `صفحة ${page} / ${pdfDoc.numPages}`; $("pgInput").value = page;
+  const p = await pdfDoc.getPage(page);
+  const wrap = $("canvasWrap"); const width = Math.max(300, wrap.clientWidth - 8) * zoom;
+  const vp0 = p.getViewport({ scale: 1 }); const scale = width / vp0.width;
+  const vp = p.getViewport({ scale: scale * (window.devicePixelRatio || 1) });
+  const canvas = $("pageCanvas"); canvas.width = vp.width; canvas.height = vp.height;
+  canvas.style.width = (vp.width / (window.devicePixelRatio || 1)) + "px";
+  if (renderTask) { try { renderTask.cancel(); } catch (e) {} }
+  renderTask = p.render({ canvasContext: canvas.getContext("2d"), viewport: vp });
+  try { await renderTask.promise; } catch (e) {}
+}
+$("pgPrev").addEventListener("click", () => renderPage(page - 1));
+$("pgNext").addEventListener("click", () => renderPage(page + 1));
+$("pgGo").addEventListener("click", () => renderPage(Number($("pgInput").value)));
+$("zoomIn").addEventListener("click", () => { zoom = Math.min(3, zoom + 0.25); renderPage(page); });
+$("zoomOut").addEventListener("click", () => { zoom = Math.max(0.5, zoom - 0.25); renderPage(page); });
+
+function startCrop(path, n) {
+  if (!pdfDoc) return alert("اختر ملف الكتاب أولًا.");
+  crop = { path, start: null }; renderPage(n);
+  $("canvasWrap").classList.add("cropping"); $("cropBanner").classList.remove("hidden");
+  $("bookPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function stopCrop() { crop = null; $("canvasWrap").classList.remove("cropping"); $("cropBanner").classList.add("hidden"); $("cropRect").classList.add("hidden"); }
+$("cropCancel").addEventListener("click", stopCrop);
+function pos(e) { const r = $("pageCanvas").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, r }; }
+$("pageCanvas").addEventListener("mousedown", (e) => { if (!crop) return; crop.start = pos(e); e.preventDefault(); });
+$("pageCanvas").addEventListener("mousemove", (e) => {
+  if (!crop || !crop.start) return; const p = pos(e), s = crop.start, box = $("cropRect"), c = $("pageCanvas");
+  box.classList.remove("hidden");
+  box.style.left = (Math.min(s.x, p.x) + c.offsetLeft) + "px"; box.style.top = (Math.min(s.y, p.y) + c.offsetTop) + "px";
+  box.style.width = Math.abs(p.x - s.x) + "px"; box.style.height = Math.abs(p.y - s.y) + "px";
+});
+$("pageCanvas").addEventListener("mouseup", (e) => {
+  if (!crop || !crop.start) return; const p = pos(e), s = crop.start, c = $("pageCanvas");
+  const k = c.width / s.r.width; // pixels réels / pixels affichés
+  const x = Math.min(s.x, p.x) * k, y = Math.min(s.y, p.y) * k, w = Math.abs(p.x - s.x) * k, h = Math.abs(p.y - s.y) * k;
+  if (w < 10 || h < 10) { crop.start = null; return; }
+  const out = document.createElement("canvas"); out.width = w; out.height = h;
+  out.getContext("2d").drawImage(c, x, y, w, h, 0, 0, w, h);
+  U().images[crop.path] = out.toDataURL("image/png"); save(); stopCrop(); renderReview();
+});
+
+// ---------- 5. Enregistrement ----------
+// Le brouillon que l'admin enregistre : chunks supprimés retirés, et pour chaque image ajoutée,
+// le champ « image » du chunk pointe vers son fichier, nommé avec le nom fixe du chunk (ref) :
+// images/u1-l2-s1-c3.png. Le nom ne dépend pas de la position, donc il reste juste même si
+// l'admin a supprimé des chunks avant lui. (Sans ref, on retombe sur la position finale.)
+// back : position finale -> position dans la page, pour remettre les remarques au bon endroit.
+function finalDraft() {
+  const u = U(); const draft = clone(u.draft); const files = {}; const back = {};
+  draft.units[0].lessons.forEach((l, li) => l.goals.forEach((g, gi) => g.skills.forEach((s, si) => {
+    const kept = [];
+    s.chunks.forEach((c, ci) => {
+      const p = chunkPath(li, gi, si, ci);
+      if (u.deleted[p]) return;
+      kept.push(c); c.order_index = kept.length; c.image = null;
+      back[chunkPath(li, gi, si, kept.length - 1)] = p;
+      const img = u.images[p];
+      if (img) {
+        const base = c.ref || `u${S.current.unit}-l${li + 1}-g${gi + 1}-s${si + 1}-c${kept.length}`;
+        const name = `${base}.${img.startsWith("data:image/jpeg") ? "jpg" : "png"}`;
+        c.image = "images/" + name; c.needs_image = true; files[name] = img;
+      }
+    });
+    s.chunks = kept;
+  })));
+  return { draft, files, back };
+}
+const CHUNK_RE = /^units\[0\]\.lessons\[\d+\]\.goals\[\d+\]\.skills\[\d+\]\.chunks\[\d+\]/;
+function remapIssues(issues, back) {
+  return issues.map((i) => Object.assign({}, i, { path: i.path.replace(CHUNK_RE, (m) => back[m] || m) }));
+}
+function computeStats() {
+  const u = U(); const per = []; let tot = { chunks: 0, kept: 0, edited: 0, deleted: 0, answers_changed: 0, images_added: 0, practice: 0 };
+  u.draftAI.units[0].lessons.forEach((l, li) => {
+    const s0 = { lesson: l.title, chunks: 0, kept: 0, edited: 0, deleted: 0, answers_changed: 0, images_added: 0 };
+    l.goals.forEach((g, gi) => g.skills.forEach((s, si) => s.chunks.forEach((c, ci) => {
+      const p = chunkPath(li, gi, si, ci); const now = getAt(u.draft, p);
+      s0.chunks++; if (c.chunk_type === "practice") tot.practice++;
+      if (u.deleted[p]) s0.deleted++; else if (JSON.stringify(now) !== JSON.stringify(c)) s0.edited++; else s0.kept++;
+      if (c.chunk_type === "practice" && !u.deleted[p]) {
+        const a = (c.options || []).find((o) => o.is_correct), b = (now.options || []).find((o) => o.is_correct);
+        if (!a || !b || a.text !== b.text) s0.answers_changed++;
+      }
+      if (u.images[p]) s0.images_added++;
+    })));
+    per.push(s0); Object.keys(s0).forEach((k) => { if (k !== "lesson") tot[k] += s0[k]; });
+  });
+  const flags = (u.aiIssues || []).filter(isFlag);
+  return Object.assign(tot, {
+    kept_percent: tot.chunks ? Math.round(100 * tot.kept / tot.chunks) : 0,
+    answer_checks: flags.length, answer_checks_done: flags.filter((i) => u.verified[i.path]).length,
+    review_minutes: u.startedAt ? Math.round((Date.now() - u.startedAt) / 60000) : null,
+    ai_seconds: u.aiSeconds, model: meta().provider || "défaut", per_lesson: per,
+  });
+}
+async function doSave(force) {
+  const u = U(); const { draft: final, files, back } = finalDraft(); const st = $("saveStatus");
+  try {
+    const check = await api("/api/validate/", { body: final });
+    check.issues = remapIssues(check.issues, back);
+    const errors = check.issues.filter((i) => i.level === "error");
+    $("saveIssues").innerHTML = errors.map((i) => issueHTML(i, true)).join("");
+    if (errors.length && !force) { $("btnSaveAnyway").classList.remove("hidden"); return setStatus(st, `يوجد ${errors.length} خطأ: صحّحها أولًا أو احفظ رغم ذلك.`, "err"); }
+    const stats = computeStats();
+    const r = await api("/api/cms/save/", { body: { book: S.bookName || "livre.pdf", unit_index: S.current.unit, plan: S.plan,
+      draft_ai: u.draftAI, final, images: files, stats } });
+    u.status = "saved"; u.savedAt = Date.now(); save(); renderUnits();
+    $("btnSaveAnyway").classList.add("hidden");
+    setStatus(st, `✔ تم الحفظ في: ${r.folder} (${r.files.length} ملفات)`, "ok");
+    const next = S.plan.units.length > S.current.unit ? `<div class="toolbar" style="grid-column:1/-1"><button class="primary" data-run-next="${S.current.unit + 1}">معالجة الوحدة ${S.current.unit + 1}</button></div>` : "";
+    $("stats").innerHTML = [
+      ["عناصر الوحدة", stats.chunks], ["بقيت كما هي", `${stats.kept} (${stats.kept_percent}%)`], ["عُدّلت", stats.edited], ["حُذفت", stats.deleted],
+      ["إجابات صحيحة غُيّرت", stats.answers_changed], ["صور أضيفت", stats.images_added],
+      ["إجابات تم التحقق منها", `${stats.answer_checks_done}/${stats.answer_checks}`], ["مدة المراجعة", stats.review_minutes != null ? stats.review_minutes + " دقيقة" : "—"],
+    ].map(([k, v]) => `<div class="stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("") + next;
+    $("stats").classList.remove("hidden"); showStep(5);
+  } catch (e) { setStatus(st, "فشل الحفظ: " + e.message, "err"); }
+}
+$("btnSave").addEventListener("click", () => doSave(false));
+$("btnSaveAnyway").addEventListener("click", () => doSave(true));
+$("stats").addEventListener("click", (e) => { if (e.target.dataset.runNext) { runUnit(Number(e.target.dataset.runNext)); $("s3").scrollIntoView({ behavior: "smooth" }); } });
+
+// ---------- Démarrage ----------
+load();
+try { $("apiKey").value = sessionStorage.getItem("fatin-key") || ""; } catch (e) {}
+health();
+if (S.plan) { renderPlan(); renderUnits(); showStep(3); $("s2").classList.remove("hidden"); $("s3").classList.remove("hidden");
+  if (S.current && S.units[S.current.unit] && S.units[S.current.unit].draft) openReview(S.current.unit);
+  setStatus($("s1Status"), "تم استرجاع العمل السابق. اختر ملف الكتاب نفسه لعرض الصفحات ومتابعة المعالجة.", ""); }
+else showStep(1);
+</script>
+</body>
+</html>

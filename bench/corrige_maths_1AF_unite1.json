@@ -1,0 +1,106 @@
+{
+  "description": "Corrigé de référence — Mathématiques 1re année primaire (كتاب الرياضيات السنة الأولى الابتدائية), unité 1, pages 7 à 22. Chaque « fait » a été vérifié en regardant le livre. Sert à trouver automatiquement les réponses fausses marquées justes (et l'inverse).",
+  "how_it_works": "Un fait = des mots (dans cet ordre) + vrai/faux. Pour chaque exercice (practice), on lit chaque option avec sa question. Si l'option marquée JUSTE correspond à un fait FAUX : erreur grave. Si une option marquée FAUSSE correspond à un fait VRAI : bonne réponse refusée. Mots : sans harakat, sans « ال ». « a|b » = a ou b. « mot* » = tous les mots qui commencent par « mot ». « context » = mots qui doivent être dans la question.",
+  "verified_on": "2026-10-20",
+  "lessons": {
+    "1.1": {
+      "title": "الوضعيات النسبية : فوق - تحت",
+      "facts": [
+        {"pages": [7, 8], "words": ["محفظه", "تحت", "طاوله"], "true": true, "note": "p7 أكتشف : المحفظة تحت الطاولة"},
+        {"pages": [7, 8], "words": ["محفظه", "فوق", "طاوله"], "true": false},
+        {"pages": [7, 8], "words": ["كتاب", "فوق", "طاوله"], "true": true, "note": "p7 أكتشف : الكتاب فوق الطاولة"},
+        {"pages": [7, 8], "words": ["كتاب", "تحت", "طاوله"], "true": false},
+        {"pages": [7], "words": ["فار", "فوق", "طاوله"], "true": true, "note": "p7 أنجز 1"},
+        {"pages": [7], "words": ["قط", "تحت", "مقعد"], "true": true, "note": "p7 أنجز 1"},
+        {"pages": [7], "words": ["كلب", "فوق", "طاوله"], "true": true, "note": "p7 تمرين 3 : الكلب فوق الطاولة"},
+        {"pages": [7], "words": ["كلب", "تحت", "طاوله"], "true": false}
+      ]
+    },
+    "1.2": {
+      "title": "الوضعيات النسبية : أمام - خلف - جنب",
+      "facts": [
+        {"pages": [10], "words": ["معلمه", "خلف", "مكتب"], "true": true, "note": "p10 أتعلم"},
+        {"pages": [10], "words": ["تلميذ", "جنب", "مكتب"], "true": true, "note": "p10 أتعلم"},
+        {"pages": [9], "words": ["فاطمه", "جنب", "معلمه"], "true": true, "note": "p9 أكتشف"},
+        {"pages": [10], "words": ["بنت", "امام", "كرسي"], "true": true, "note": "p10 أطبق 2"},
+        {"pages": [10], "words": ["بنت", "خلف", "كرسي"], "true": false},
+        {"pages": [10], "words": ["ولد", "خلف", "كرسي"], "true": true, "note": "p10 أطبق 2"},
+        {"pages": [10], "words": ["ولد", "امام", "كرسي"], "true": false}
+      ]
+    },
+    "1.3": {
+      "title": "الوضعيات النسبية : يمين - يسار - عن يمين - عن يسار",
+      "facts": [
+        {"pages": [11], "words": ["موزه", "يمني"], "true": true, "note": "p11 : le monsieur est face à l'enfant, la banane est dans SA main droite"},
+        {"pages": [11], "words": ["تفاحه", "يمني"], "true": false},
+        {"pages": [11], "words": ["تفاحه", "يسري"], "true": true},
+        {"pages": [11], "words": ["موزه", "يسري"], "true": false},
+        {"pages": [12], "words": ["سياره", "يمين", "كره"], "true": false, "note": "p12 أطبق 2 : la voiture est à GAUCHE du ballon (piège du sens de lecture)"},
+        {"pages": [12], "words": ["دميه", "يمين", "محفظه"], "true": true, "note": "p12 أطبق 2 : ordre de gauche à droite : voiture, ballon, cartable, poupée, livre"},
+        {"pages": [12], "words": ["محفظه", "يمين", "كره"], "true": true},
+        {"pages": [12], "words": ["كتاب", "يسار", "دميه"], "true": false},
+        {"pages": [12], "words": ["حنفيه", "يمين", "شجره"], "true": true, "note": "p12 أطبق 3"},
+        {"pages": [12], "words": ["كره", "يسار", "شجره"], "true": true},
+        {"pages": [12], "words": ["حنفيه", "يسار", "شجره"], "true": false},
+        {"pages": [12], "words": ["كره", "يمين", "شجره"], "true": false}
+      ]
+    },
+    "1.4": {
+      "title": "العدد واحد 1",
+      "facts": [
+        {"pages": [13], "words": ["1|واحد|واحده", "جمل"], "true": true, "note": "p13 أنجز 3 : un seul chameau"},
+        {"pages": [13], "words": ["1|واحد|واحده", "كلب"], "true": true, "note": "p13 أنجز 3 : un seul chien"},
+        {"pages": [13], "words": ["1|واحد|واحده", "سيارات"], "true": false, "note": "p13 أنجز 3 : 3 voitures"}
+      ]
+    },
+    "1.5": {
+      "title": "العدد اثنان 2",
+      "facts": [
+        {"pages": [15], "words": ["2|اثن*|شيئان|شيئين", "موز*"], "true": true, "note": "p15 أنجز 2 : 2 bananes"},
+        {"pages": [15], "words": ["2|اثن*|شيئان|شيئين", "محفظ*"], "true": true, "note": "p15 أنجز 2 : 2 cartables"},
+        {"pages": [15], "words": ["2|اثن*|شيئان|شيئين", "بقر*"], "true": false, "note": "1 vache"},
+        {"pages": [15], "words": ["2|اثن*|شيئان|شيئين", "اقلام|قلم*"], "true": false, "note": "3 crayons"},
+        {"pages": [16], "context": ["مجموع*"], "words": ["2|اثن*", "مربع*"], "true": true, "note": "p16 أطبق 3 : 2 carrés"},
+        {"pages": [16], "context": ["مجموع*"], "words": ["2|اثن*", "مثلث*"], "true": true, "note": "p16 أطبق 3 : 2 triangles (pas 1)"},
+        {"pages": [16], "context": ["مجموع*"], "words": ["2|اثن*", "ازهار|زهر*|ورود|ورد*"], "true": true, "note": "2 fleurs"},
+        {"pages": [16], "context": ["مجموع*"], "words": ["2|اثن*", "تفاح*"], "true": false, "note": "3 pommes"},
+        {"pages": [16], "words": ["2|اثن*|مرتين", "عين*"], "true": true, "note": "p16 أطبق 2 : les yeux"},
+        {"pages": [16], "words": ["2|اثن*|مرتين", "انف"], "true": false},
+        {"pages": [16], "words": ["2|اثن*|مرتين", "فم"], "true": false}
+      ]
+    },
+    "1.6": {
+      "title": "العدد ثلاثة 3",
+      "facts": [
+        {"pages": [17], "words": ["3|ثلاث*", "نمل*"], "true": true, "note": "p17 أنجز 2 : 3 fourmis"},
+        {"pages": [17], "words": ["3|ثلاث*", "سيار*"], "true": true, "note": "p17 أنجز 2 : 3 voitures"},
+        {"pages": [17], "words": ["3|ثلاث*", "دجاج*|ديك*"], "true": false, "note": "p17 : coq, poule et poussins = 5"},
+        {"pages": [17], "words": ["3|ثلاث*", "حمار"], "true": false, "note": "1 âne"},
+        {"pages": [18], "words": ["علم*", "3|ثلاث*"], "true": true, "note": "p18 : drapeau national = 3 couleurs"},
+        {"pages": [18], "words": ["علم*", "2|اثن*|لونان|لونين"], "true": false},
+        {"pages": [18], "words": ["اشار*", "3|ثلاث*"], "true": true, "note": "p18 : feu de circulation = 3 couleurs"}
+      ]
+    },
+    "1.7": {
+      "title": "العدد أربعة 4",
+      "facts": [
+        {"pages": [19], "words": ["مصابيح", "اربع*|4"], "true": true, "note": "p19 أنجز 1 : 4 lampes"},
+        {"pages": [19], "words": ["مصابيح", "ثلاث*|اثن*|3|2"], "true": false},
+        {"pages": [19], "words": ["4|اربع*", "هاتف|هواتف|هاتفين"], "true": false, "note": "p19 أنجز 2 : 2 téléphones seulement"},
+        {"pages": [19], "words": ["4|اربع*", "اطفال|طفل*|اولاد"], "true": true, "note": "4 enfants"},
+        {"pages": [19], "words": ["4|اربع*", "مقلم*|مقالم|علب*|حافظ*|سيار*"], "true": true, "note": "4 trousses (en forme de voitures)"},
+        {"pages": [19], "words": ["4|اربع*", "حلو*|غزل*|بوظ*"], "true": true, "note": "4 barbes à papa"}
+      ]
+    },
+    "1.8": {
+      "title": "العدد خمسة 5",
+      "facts": [
+        {"pages": [21], "words": ["طاولات|طاول*", "5|خمس*"], "true": true, "note": "p21 أنجز 3 : 5 tables"},
+        {"pages": [21], "words": ["طاولات|طاول*", "4|اربع*|3|ثلاث*"], "true": false},
+        {"pages": [21], "words": ["اشجار", "خمس*|5"], "true": true, "note": "p21 أنجز 1 : 5 arbres"},
+        {"pages": [21], "words": ["اشجار", "اربع*|ثلاث*|4|3"], "true": false},
+        {"pages": [22], "words": ["اصابع|اصابعها|يد*|كف*", "5|خمس*"], "true": true, "note": "p22 : une main = 5 doigts"}
+      ]
+    }
+  }
+}

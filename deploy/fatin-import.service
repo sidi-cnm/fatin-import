@@ -1,0 +1,15 @@
+# Service systemd : démarre l'API au démarrage du serveur et la relance si elle s'arrête.
+# Copier dans /etc/systemd/system/fatin-import.service
+[Unit]
+Description=FATIN import service (API)
+After=network.target
+
+[Service]
+User=fatin
+WorkingDirectory=/opt/fatin-import
+ExecStart=/opt/fatin-import/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
